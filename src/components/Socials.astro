@@ -1,0 +1,75 @@
+---
+import { site } from '../data/site';
+---
+
+<section aria-labelledby="socials-heading">
+  <h2 id="socials-heading">Síguela</h2>
+  <div class="cards">
+    {
+      site.socials.map((social) => (
+        <a
+          class:list={['card', { 'card-primary': social.kind === 'tips' }]}
+          href={social.url}
+          target="_blank"
+          rel="noopener"
+        >
+          {social.kind === 'instagram' && (
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4.2" />
+              <circle cx="17.3" cy="6.7" r="1.2" fill="currentColor" stroke="none" />
+            </svg>
+          )}
+          {social.kind === 'linktree' && (
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 22V4M12 9 6.8 3.8M12 9l5.2-5.2M12 15l-5.2-5.2M12 15l5.2-5.2" />
+            </svg>
+          )}
+          {social.kind === 'tips' && (
+            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path
+                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"
+              />
+            </svg>
+          )}
+          <span class="label">{social.label}</span>
+          <span class="visually-hidden">
+            {social.kind === 'tips' ? '(aportar)' : `(${social.label} de ${site.artist})`}
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .cards {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .label {
+    flex: 1;
+    text-align: left;
+  }
+
+  .card-primary .label {
+    text-align: center;
+  }
+</style>

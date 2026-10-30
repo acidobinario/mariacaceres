@@ -1,0 +1,52 @@
+---
+import '@fontsource-variable/inter';
+import { getImage } from 'astro:assets';
+import { site } from '../data/site';
+import '../styles/global.css';
+
+const title = `${site.artist} — ${site.single.title}`;
+const description = `"${site.single.title}", el primer single de ${site.artist}. Escúchalo en Spotify, Apple Music y todas las plataformas.`;
+const withBase = (path: string) =>
+  `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
+const pageUrl = new URL(withBase(''), Astro.site).href;
+const optimizedCover = await getImage({
+  src: site.single.cover,
+  width: 800,
+  height: 800,
+  format: 'jpg',
+});
+const coverUrl = new URL(optimizedCover.src, Astro.site).href;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b0b0c" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href={withBase('favicon.svg')}
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.artist} />
+    <meta property="og:locale" content="es" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={coverUrl} />
+    <meta property="og:image:width" content="800" />
+    <meta property="og:image:height" content="800" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={coverUrl} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
