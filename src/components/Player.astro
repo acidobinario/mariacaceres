@@ -2,37 +2,46 @@
 import { site } from '../data/site';
 ---
 
-<section aria-labelledby="player-heading">
-  <h2 id="player-heading">En Spotify</h2>
-  <iframe
-    src={`https://open.spotify.com/embed/album/${site.single.spotifyAlbumId}`}
-    title="Reproductor de Spotify: In My Life"
-    loading="lazy"
-    height="152"
-    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-  ></iframe>
-  <p class="fallback">
-    ¿No carga el reproductor?{' '}
-    <a href={site.listen[0].url} target="_blank" rel="noopener">Ábrelo en Spotify</a>.
-  </p>
+<section class="band" aria-labelledby="player-heading">
+  <div class="wrap">
+    <div class="reveal">
+      <h2 id="player-heading">En Spotify</h2>
+      <iframe
+        src={`https://open.spotify.com/embed/album/${site.single.spotifyAlbumId}`}
+        title="Reproductor de Spotify: In My Life"
+        loading="lazy"
+        height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      ></iframe>
+      <p class="fallback">
+        ¿No carga el reproductor?{' '}
+        <a href={site.listen[0].url} target="_blank" rel="noopener">Ábrelo en Spotify</a>.
+      </p>
+    </div>
+  </div>
 </section>
 
 <style>
   iframe {
     display: block;
     width: 100%;
+    max-width: 46rem;
+    height: 352px;
+    margin-inline: auto;
     border: 0;
-    border-radius: 0.5rem;
     background: var(--card);
   }
 
   .fallback {
-    margin: 0.75rem 0 0;
-    font-size: 0.85rem;
+    margin: 1rem auto 0;
+    max-width: 46rem;
+    font-size: 0.9rem;
     color: var(--muted);
   }
 
   .fallback a {
+    display: inline-block;
+    padding-block: 0.35rem;
     text-underline-offset: 3px;
   }
 </style>

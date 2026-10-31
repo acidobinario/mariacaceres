@@ -3,28 +3,42 @@ import { site } from '../data/site';
 ---
 
 <section aria-labelledby="youtube-heading">
-  <h2 id="youtube-heading">YouTube</h2>
-  {
-    site.youtube.videoId ? (
-      <iframe
-        src={`https://www.youtube-nocookie.com/embed/${site.youtube.videoId}`}
-        title={`Video de ${site.youtube.label}`}
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      />
-    ) : (
-      <a class="card" href={site.youtube.url} target="_blank" rel="noopener">
-        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
-          />
-        </svg>
-        <span class="label">{site.youtube.label}</span>
-        <span class="action">Ver canal</span>
-      </a>
-    )
-  }
+  <div class="wrap">
+    <h2 id="youtube-heading">YouTube</h2>
+    {
+      site.youtube.videoId ? (
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${site.youtube.videoId}`}
+          title={`Video de ${site.youtube.label}`}
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        />
+      ) : (
+        <a class="yt-card card reveal" href={site.youtube.url} target="_blank" rel="noopener">
+          <svg class="yt-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+          </svg>
+          <span class="label">{site.youtube.label}</span>
+          <span class="action">
+            Ver canal
+            <svg
+              class="arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </a>
+      )
+    }
+  </div>
 </section>
 
 <style>
@@ -33,18 +47,60 @@ import { site } from '../data/site';
     width: 100%;
     aspect-ratio: 16 / 9;
     border: 0;
-    border-radius: 0.5rem;
     background: var(--card);
+  }
+
+  .yt-card {
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    min-height: clamp(8rem, 16vw, 11rem);
+  }
+
+  .yt-icon {
+    flex: none;
+    width: clamp(2.5rem, 6vw, 3.5rem);
+    height: clamp(2.5rem, 6vw, 3.5rem);
   }
 
   .label {
     flex: 1;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     text-align: left;
-    font-weight: 550;
   }
 
   .action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     color: var(--muted);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .arrow {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  @media (min-width: 48em) {
+    .action {
+      color: var(--fg);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .yt-card:hover .arrow {
+      transform: translateX(6px);
+    }
+
+    .arrow {
+      transition: transform 0.18s ease;
+    }
   }
 </style>

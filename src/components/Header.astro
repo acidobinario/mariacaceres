@@ -1,0 +1,41 @@
+---
+import { site } from '../data/site';
+---
+
+<header class="site-header">
+  <a class="wordmark" href="#inicio">{site.artist}</a>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    padding-block: 0.4rem;
+    background: rgb(10 10 11 / 0.55);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border-block-end: 1px solid rgb(244 241 234 / 0.08);
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 1rem;
+    color: var(--fg);
+    font-size: 0.78rem;
+    font-weight: 550;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .wordmark:hover {
+    color: var(--muted);
+  }
+</style>
