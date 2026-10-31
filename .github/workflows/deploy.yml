@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, 'design/**']
   workflow_dispatch:
 
 permissions:
@@ -20,6 +20,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
@@ -29,6 +32,13 @@ jobs:
         run: npm ci
       - name: Build and test
         run: npm test
+      # Each design/<name> branch is published as a preview at /mariacaceres/<name>/
+      - name: Build design previews
+        run: |
+          for ref in $(git for-each-ref --format='%(refname:lstrip=4)' 'refs/remotes/origin/design/'); do
+            git worktree add "../preview-$ref" "origin/design/$ref"
+            (cd "../preview-$ref" && npm ci && npx astro build --base "/mariacaceres/$ref" --outDir "$GITHUB_WORKSPACE/dist/$ref")
+          done
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
