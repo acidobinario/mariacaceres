@@ -3,14 +3,34 @@ import { site } from '../data/site';
 ---
 
 <section aria-labelledby="bio-heading">
-  <h2 id="bio-heading">Biografía</h2>
-  <p class="bio">{site.bio}</p>
+  <h2 id="bio-heading" class="section-head">
+    <span class="num">02</span>Biografía
+  </h2>
+  <div class="bio-grid" data-reveal>
+    <p class="bio-text">{site.bio}</p>
+  </div>
 </section>
 
 <style>
-  .bio {
+  .bio-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+  }
+
+  .bio-text {
+    grid-column: 1 / -1;
     margin: 0;
-    font-size: 1.05rem;
-    max-width: 42ch;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    line-height: 1.55;
+    max-width: 34em;
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 900px) {
+    .bio-text {
+      grid-column: 4 / 12;
+    }
   }
 </style>

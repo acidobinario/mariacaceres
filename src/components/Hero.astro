@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets';
 import { site } from '../data/site';
+import Player from './Player.astro';
+
+const year = new Date(site.single.releaseDate).getFullYear();
 
 const icons = {
   spotify:
@@ -11,90 +14,131 @@ const icons = {
 } as const;
 ---
 
-<section class="hero" aria-labelledby="listen">
-  <Image
-    class="cover"
-    src={site.single.cover}
-    alt={`Portada del single "${site.single.title}" de ${site.artist}`}
-    widths={[360, 480, 640, 800]}
-    sizes="(min-width: 520px) 420px, calc(100vw - 3rem)"
-    priority
-  />
-  <p class="artist">{site.artist}</p>
-  <h1>“{site.single.title}”</h1>
-  <p class="meta">Single · 2026</p>
-  <h2 id="listen">Escúchala ahora</h2>
-  <div class="buttons">
-    {
-      site.listen.map((item) => (
-        <a
-          class:list={['btn', { 'btn-primary': item.platform === 'spotify' }]}
-          href={item.url}
-          target="_blank"
-          rel="noopener"
-        >
-          {item.platform === 'more' ? (
-            <svg
-              class="icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              aria-hidden="true"
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-grid">
+    <figure class="hero-figure" data-reveal>
+      <Image
+        class="cover"
+        src={site.single.cover}
+        alt={`Portada del single "${site.single.title}" de ${site.artist}`}
+        widths={[360, 480, 640, 800]}
+        sizes="(min-width: 1200px) 560px, (min-width: 768px) 44vw, calc(100vw - 2.5rem)"
+        priority
+      />
+      <figcaption class="caption">
+        <span>“{site.single.title}”</span>
+        <span>{year}</span>
+      </figcaption>
+    </figure>
+    <div class="hero-body" data-reveal style="--reveal-delay: 0.1s">
+      <p class="eyebrow">{site.artist}</p>
+      <h1 id="hero-heading">“{site.single.title}”</h1>
+      <p class="meta">Single · {year}</p>
+      <h2 id="listen" class="section-head">
+        <span class="num">01</span>Escúchala
+      </h2>
+      <div class="buttons">
+        {
+          site.listen.map((item) => (
+            <a
+              class:list={['btn', { 'btn-primary': item.platform === 'spotify' }]}
+              href={item.url}
+              target="_blank"
+              rel="noopener"
             >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18" />
-            </svg>
-          ) : (
-            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d={icons[item.platform]} />
-            </svg>
-          )}
-          {item.label}
-        </a>
-      ))
-    }
+              {item.platform === 'more' ? (
+                <svg
+                  class="icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18" />
+                </svg>
+              ) : (
+                <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d={icons[item.platform]} />
+                </svg>
+              )}
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+      <div class="player-wrap">
+        <Player />
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    padding-top: 2.5rem;
-    text-align: center;
-    border-top: none;
+    padding-block: clamp(2.25rem, 6vw, 5rem);
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .hero-figure {
+    margin: 0;
+    padding: clamp(0.6rem, 1.2vw, 0.9rem);
+    border: 1px solid var(--line-strong);
+    background: var(--bg-raise);
   }
 
   .cover {
     display: block;
     width: 100%;
-    max-width: 26rem;
-    margin-inline: auto;
     height: auto;
-    border-radius: 0.75rem;
-    box-shadow: 0 24px 60px rgb(0 0 0 / 0.55);
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.5);
   }
 
-  .artist {
-    margin: 2rem 0 0.25rem;
+  .caption {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.7rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+  }
+
+  .eyebrow {
+    margin: 0;
     font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
     color: var(--muted);
   }
 
   h1 {
-    font-size: clamp(2.4rem, 10vw, 3.4rem);
-    margin: 0;
+    margin-top: 0.75rem;
+    font-family: var(--serif);
+    font-weight: 450;
+    font-size: clamp(2.6rem, 8vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
   }
 
   .meta {
-    margin: 0.6rem 0 0;
+    margin: 1.1rem 0 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
     color: var(--muted);
-    font-size: 0.95rem;
   }
 
-  .hero h2 {
-    margin-top: 2.25rem;
+  .hero-body .section-head {
+    margin-top: clamp(2.5rem, 6vw, 3.5rem);
   }
 
   .buttons {
@@ -102,13 +146,39 @@ const icons = {
     gap: 0.75rem;
   }
 
-  @media (min-width: 520px) {
+  .player-wrap {
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 640px) {
     .buttons {
       grid-template-columns: repeat(2, 1fr);
     }
 
     .buttons a:last-child {
       grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-grid {
+      grid-template-columns: repeat(12, 1fr);
+      gap: 3rem 2rem;
+      align-items: center;
+    }
+
+    .hero-figure {
+      grid-column: 1 / 7;
+    }
+
+    .hero-body {
+      grid-column: 7 / 13;
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .hero-body {
+      grid-column: 8 / 13;
     }
   }
 </style>

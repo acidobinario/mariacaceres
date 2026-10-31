@@ -1,0 +1,67 @@
+---
+import { site } from '../data/site';
+
+const year = new Date(site.single.releaseDate).getFullYear();
+---
+
+<header class="site-header">
+  <div class="container inner">
+    <p class="brand">{site.artist}</p>
+    <p class="tag">
+      “{site.single.title}”<span class="ext"> · Single · {year}</span>
+    </p>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    background: rgb(13 12 10 / 0.78);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header {
+      background: var(--bg);
+    }
+  }
+
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 3.75rem;
+  }
+
+  .brand {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+  }
+
+  .tag {
+    margin: 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .ext {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .ext {
+      display: inline;
+    }
+  }
+</style>

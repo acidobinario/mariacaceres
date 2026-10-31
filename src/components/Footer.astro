@@ -1,23 +1,43 @@
 ---
 import { site } from '../data/site';
+
+const year = new Date(site.single.releaseDate).getFullYear();
 ---
 
-<footer>
-  <p>© 2026 {site.artist}</p>
+<footer class="site-footer">
+  <div class="container inner">
+    <p class="copy">© {year} {site.artist}</p>
+    <p class="footnote">“{site.single.title}” · Single</p>
+  </div>
 </footer>
 
 <style>
-  footer {
-    max-width: var(--max-width);
-    margin-inline: auto;
-    padding: 2.25rem 1.5rem 3rem;
+  .site-footer {
     border-top: 1px solid var(--line);
-    text-align: center;
-    color: var(--muted);
-    font-size: 0.85rem;
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 2rem;
+    padding-block: 2.5rem 3.25rem;
   }
 
   p {
     margin: 0;
+  }
+
+  .copy {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .footnote {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--muted);
   }
 </style>
