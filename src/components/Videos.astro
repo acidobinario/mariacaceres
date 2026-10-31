@@ -1,0 +1,148 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+
+<section id="videos" class="videos" aria-labelledby="videos-heading">
+  <div class="backdrop" aria-hidden="true">
+    <Image
+      class="backdrop-img"
+      src={site.releases[0].cover}
+      alt=""
+      widths={[720, 1100, 1500]}
+      sizes="100vw"
+      loading="lazy"
+      decoding="async"
+    />
+  </div>
+  <div class="container videos-inner reveal">
+    <h2 id="videos-heading" class="overline">Videos</h2>
+    <a class="channel-card" href={site.youtube.url} target="_blank" rel="noopener">
+      <span class="play-badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.5 7.5v9l7.5-4.5Z"></path>
+        </svg>
+      </span>
+      <span class="channel-title">{site.youtube.label}</span>
+      <span class="channel-cta">
+        Ver canal
+        <Icon name="arrow" />
+      </span>
+    </a>
+  </div>
+</section>
+
+<style>
+  .videos {
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    padding-block: clamp(5rem, 14vh, 8rem);
+  }
+
+  .backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .backdrop-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.16;
+    filter: grayscale(1) contrast(1.1);
+  }
+
+  .backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      var(--bg) 0%,
+      rgb(11 11 12 / 0.35) 50%,
+      var(--bg) 100%
+    );
+  }
+
+  .videos-inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .channel-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    min-height: 20rem;
+    padding: clamp(2rem, 6vh, 3.5rem) 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.75rem;
+    justify-content: center;
+  }
+
+  .channel-card:hover {
+    border-color: var(--fg);
+  }
+
+  .channel-card:hover .play-badge {
+    background: var(--fg);
+    color: var(--ink);
+    border-color: var(--fg);
+  }
+
+  .play-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 84px;
+    height: 84px;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+  }
+
+  .play-badge svg {
+    width: 30px;
+    height: 30px;
+    margin-left: 3px;
+  }
+
+  .channel-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.9rem, 4.5vw, 3.1rem);
+    line-height: 1.12;
+    max-width: 22ch;
+  }
+
+  .channel-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-top: 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .channel-card:hover .channel-cta {
+    color: var(--fg);
+  }
+
+  @media (min-width: 1024px) {
+    .channel-card {
+      min-height: 26rem;
+    }
+  }
+</style>

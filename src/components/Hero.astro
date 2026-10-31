@@ -1,114 +1,152 @@
 ---
 import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
 import { site } from '../data/site';
 
-const icons = {
-  spotify:
-    'M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.5 17.3c-.24.36-.66.48-1.02.24-2.82-1.74-6.36-2.1-10.56-1.14-.42.12-.78-.18-.9-.54-.12-.42.18-.78.54-.9 4.56-1.02 8.52-.6 11.64 1.32.42.18.48.66.3 1.02zm1.44-3.3c-.3.42-.84.6-1.26.3-3.24-1.98-8.16-2.58-11.94-1.38-.48.12-1.02-.12-1.14-.6-.12-.48.12-1.02.6-1.14 4.32-1.32 9.72-.66 13.44 1.62.36.18.54.78.24 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.3c-.6.18-1.2-.18-1.38-.72-.18-.6.18-1.2.72-1.38 4.26-1.26 11.28-1.02 15.72 1.62.54.3.72 1.02.42 1.56-.3.42-1.02.6-1.56.3z',
-  apple:
-    'M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701',
-  more: null,
-} as const;
+const release = site.releases[0];
+const primaryLink =
+  release.listen.find((item) => item.platform === 'more') ?? release.listen[0];
+const secondaryLinks = release.listen.filter((item) => item.platform !== 'more');
 ---
 
-<section class="hero" aria-labelledby="listen">
-  <Image
-    class="cover"
-    src={site.single.cover}
-    alt={`Portada del single "${site.single.title}" de ${site.artist}`}
-    widths={[360, 480, 640, 800]}
-    sizes="(min-width: 520px) 420px, calc(100vw - 3rem)"
-    priority
-  />
-  <p class="artist">{site.artist}</p>
-  <h1>“{site.single.title}”</h1>
-  <p class="meta">Single · 2026</p>
-  <h2 id="listen">Escúchala ahora</h2>
-  <div class="buttons">
-    {
-      site.listen.map((item) => (
-        <a
-          class:list={['btn', { 'btn-primary': item.platform === 'spotify' }]}
-          href={item.url}
-          target="_blank"
-          rel="noopener"
-        >
-          {item.platform === 'more' ? (
-            <svg
-              class="icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.8"
-              aria-hidden="true"
-            >
-              <circle cx="12" cy="12" r="9" />
-              <path d="M3 12h18M12 3c2.8 2.6 2.8 15.4 0 18M12 3c-2.8 2.6-2.8 15.4 0 18" />
-            </svg>
-          ) : (
-            <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d={icons[item.platform]} />
-            </svg>
-          )}
-          {item.label}
+<section class="hero" aria-labelledby="hero-title">
+  <div class="container hero-inner">
+    <div class="hero-media">
+      <Image
+        class="cover"
+        src={release.cover}
+        alt={`Portada del single "${release.title}" de ${site.artist}`}
+        widths={[480, 640, 800, 1000]}
+        sizes="(min-width: 1024px) 42vw, (min-width: 640px) 55vw, calc(100vw - 2.5rem)"
+        priority
+      />
+    </div>
+    <div class="hero-copy">
+      <p class="hero-kicker">Nuevo single</p>
+      <h1 id="hero-title">“{release.title}”</h1>
+      <p class="hero-meta">{release.type} · {release.year}</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href={primaryLink.url} target="_blank" rel="noopener">
+          Escuchar
+          <Icon name="arrow" />
         </a>
-      ))
-    }
+        {
+          secondaryLinks.map((item) => (
+            <a class="btn btn-ghost" href={item.url} target="_blank" rel="noopener">
+              <Icon name={item.platform === 'spotify' ? 'spotify' : 'apple'} />
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .hero {
-    padding-top: 2.5rem;
-    text-align: center;
-    border-top: none;
+    padding-block: 1.5rem 4rem;
+  }
+
+  .hero-inner {
+    display: grid;
+    gap: 2rem;
   }
 
   .cover {
     display: block;
     width: 100%;
-    max-width: 26rem;
-    margin-inline: auto;
     height: auto;
-    border-radius: 0.75rem;
-    box-shadow: 0 24px 60px rgb(0 0 0 / 0.55);
+    border-radius: 0.65rem;
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.5);
+    position: relative;
+    z-index: 0;
   }
 
-  .artist {
-    margin: 2rem 0 0.25rem;
+  .hero-media {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.65rem;
+    transform: translate(14px, 14px);
+    z-index: -1;
+  }
+
+  .hero-kicker {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
-    letter-spacing: 0.22em;
-    font-size: 0.85rem;
     color: var(--muted);
+  }
+
+  .hero-kicker::before {
+    content: '';
+    width: 2.5rem;
+    height: 1px;
+    background: var(--muted);
   }
 
   h1 {
-    font-size: clamp(2.4rem, 10vw, 3.4rem);
-    margin: 0;
+    margin: 0.9rem 0 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(3.1rem, 9vw, 5.6rem);
+    line-height: 1.02;
+    letter-spacing: 0.01em;
   }
 
-  .meta {
-    margin: 0.6rem 0 0;
+  .hero-meta {
+    margin: 1rem 0 0;
     color: var(--muted);
     font-size: 0.95rem;
+    letter-spacing: 0.06em;
   }
 
-  .hero h2 {
-    margin-top: 2.25rem;
+  .hero-actions {
+    margin-top: 2.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
   }
 
-  .buttons {
-    display: grid;
-    gap: 0.75rem;
-  }
-
-  @media (min-width: 520px) {
-    .buttons {
-      grid-template-columns: repeat(2, 1fr);
+  @media (min-width: 1024px) {
+    .hero {
+      min-height: calc(100svh - var(--header-height));
+      display: flex;
+      align-items: center;
+      padding-block: 5.5rem;
     }
 
-    .buttons a:last-child {
-      grid-column: 1 / -1;
+    .hero-inner {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: center;
+    }
+
+    .hero-media {
+      order: 2;
+      margin-left: clamp(-4rem, -3vw, 0rem);
+    }
+
+    .hero-copy {
+      order: 1;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      text-shadow: 0 2px 32px rgb(0 0 0 / 0.45);
     }
   }
 </style>

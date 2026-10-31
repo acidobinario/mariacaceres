@@ -1,20 +1,22 @@
 ---
 import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
-import Player from '../components/Player.astro';
+import Music from '../components/Music.astro';
+import Videos from '../components/Videos.astro';
 import Bio from '../components/Bio.astro';
-import YouTube from '../components/YouTube.astro';
-import Socials from '../components/Socials.astro';
+import Support from '../components/Support.astro';
 import Footer from '../components/Footer.astro';
 ---
 
 <Base>
-  <main>
+  <Header />
+  <main id="contenido">
     <Hero />
-    <Player />
+    <Music />
+    <Videos />
     <Bio />
-    <YouTube />
-    <Socials />
+    <Support />
   </main>
   <Footer />
 </Base>

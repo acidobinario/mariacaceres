@@ -1,23 +1,127 @@
 ---
+import Icon from './Icon.astro';
 import { site } from '../data/site';
+
+const nav = [
+  { label: 'Música', href: '#musica' },
+  { label: 'Videos', href: '#videos' },
+  { label: 'Biografía', href: '#biografia' },
+  { label: 'Apóyame', href: '#apoyame' },
+];
+const instagram = site.socials.find((item) => item.kind === 'instagram');
+const linktree = site.socials.find((item) => item.kind === 'linktree');
+const socials = [
+  instagram && { label: instagram.label, url: instagram.url, icon: 'instagram' as const },
+  { label: 'YouTube', url: site.youtube.url, icon: 'youtube' as const },
+  linktree && { label: linktree.label, url: linktree.url, icon: 'linktree' as const },
+].filter((item): item is { label: string; url: string; icon: 'instagram' | 'youtube' | 'linktree' } =>
+  Boolean(item),
+);
 ---
 
-<footer>
-  <p>© 2026 {site.artist}</p>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <p class="wordmark">{site.artist}</p>
+      <p class="copyright">© 2026 {site.artist}</p>
+    </div>
+    <nav class="footer-nav" aria-label="Secciones del pie">
+      <p class="footer-heading">Secciones</p>
+      {
+        nav.map((item) => (
+          <a href={item.href}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <div class="footer-socials-block">
+      <p class="footer-heading">Sígueme</p>
+      <ul class="footer-socials">
+        {
+          socials.map((item) => (
+            <li>
+              <a href={item.url} target="_blank" rel="noopener">
+                <Icon name={item.icon} />
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
 </footer>
 
 <style>
-  footer {
-    max-width: var(--max-width);
-    margin-inline: auto;
-    padding: 2.25rem 1.5rem 3rem;
+  .site-footer {
     border-top: 1px solid var(--line);
-    text-align: center;
+    padding-block: 3.5rem 2.5rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .wordmark {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.6rem;
+  }
+
+  .copyright {
+    margin: 0.5rem 0 0;
     color: var(--muted);
     font-size: 0.85rem;
   }
 
-  p {
+  .footer-heading {
+    margin: 0 0 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .footer-nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-nav a,
+  .footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    color: var(--fg-soft);
+    text-decoration: none;
+  }
+
+  .footer-nav a:hover,
+  .footer-socials a:hover {
+    color: var(--fg);
+  }
+
+  .footer-socials {
+    list-style: none;
     margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .footer-socials :global(li + li) a {
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 2rem;
+    }
   }
 </style>

@@ -1,16 +1,84 @@
 ---
+import { Image } from 'astro:assets';
 import { site } from '../data/site';
+
+const release = site.releases[0];
 ---
 
-<section aria-labelledby="bio-heading">
-  <h2 id="bio-heading">Biografía</h2>
-  <p class="bio">{site.bio}</p>
+<section id="biografia" class="section" aria-labelledby="bio-heading">
+  <div class="container bio-grid reveal">
+    <div class="portrait-wrap">
+      <Image
+        class="portrait"
+        src={release.cover}
+        alt={`Portada del single "${release.title}" de ${site.artist}`}
+        widths={[360, 520, 700]}
+        sizes="(min-width: 1024px) 34vw, (min-width: 640px) 46vw, calc(100vw - 2.5rem)"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
+    <div class="bio-copy">
+      <h2 id="bio-heading" class="overline">Biografía</h2>
+      <p class="bio">{site.bio}</p>
+    </div>
+  </div>
 </section>
 
 <style>
+  .bio-grid {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  .portrait-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 28rem;
+  }
+
+  .portrait-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.65rem;
+    transform: translate(-14px, 14px);
+    z-index: -1;
+  }
+
+  .portrait {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: 0.65rem;
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.45);
+  }
+
   .bio {
     margin: 0;
-    font-size: 1.05rem;
-    max-width: 42ch;
+    max-width: 38ch;
+    font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+    line-height: 1.75;
+    color: var(--fg-soft);
+  }
+
+  .bio::first-letter {
+    float: left;
+    padding: 0.06em 0.14em 0 0;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 3.2em;
+    line-height: 0.78;
+    color: var(--fg);
+  }
+
+  @media (min-width: 1024px) {
+    .bio-grid {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: clamp(2.5rem, 6vw, 5.5rem);
+    }
   }
 </style>

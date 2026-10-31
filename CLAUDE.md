@@ -7,8 +7,10 @@ changing layout, sections or look.
 
 ## Where the data lives
 
-All links and text are in **`src/data/site.ts`**. Adding or changing a link, release, bio or
-social means editing that file only; components read from it. The cover is committed under
+All links and text are in **`src/data/site.ts`**: `releases` (array, newest first — title,
+type, year, cover, Spotify album id and its `listen` links), `bio`, `youtube` and `socials`.
+Adding or changing a link, release, bio or social means editing that file only; components
+read from it (the hero and featured card use `releases[0]`). The cover is committed under
 `src/assets/` (never hotlink DistroKid's CDN).
 
 ## Where to get new data

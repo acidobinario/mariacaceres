@@ -1,16 +1,17 @@
 ---
 import '@fontsource-variable/inter';
+import '@fontsource-variable/playfair-display';
 import { getImage } from 'astro:assets';
 import { site } from '../data/site';
 import '../styles/global.css';
 
-const title = `${site.artist} — ${site.single.title}`;
-const description = `"${site.single.title}", el primer single de ${site.artist}. Escúchalo en Spotify, Apple Music y todas las plataformas.`;
+const title = `${site.artist} — ${site.releases[0].title}`;
+const description = `"${site.releases[0].title}", el primer single de ${site.artist}. Escúchalo en Spotify, Apple Music y todas las plataformas.`;
 const withBase = (path: string) =>
   `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path.replace(/^\//, '')}`;
 const pageUrl = new URL(withBase(''), Astro.site).href;
 const optimizedCover = await getImage({
-  src: site.single.cover,
+  src: site.releases[0].cover,
   width: 800,
   height: 800,
   format: 'jpg',
@@ -27,11 +28,7 @@ const coverUrl = new URL(optimizedCover.src, Astro.site).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={pageUrl} />
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href={withBase('favicon.svg')}
-    />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.artist} />
     <meta property="og:locale" content="es" />
@@ -45,8 +42,104 @@ const coverUrl = new URL(optimizedCover.src, Astro.site).href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={coverUrl} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
   <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
+    <script is:inline>
+      (function () {
+        var d = document;
+        var w = window;
+
+        var header = d.getElementById('site-header');
+        function onScroll() {
+          if (header) header.classList.toggle('is-scrolled', w.scrollY > 4);
+        }
+        w.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+
+        var btn = d.getElementById('menu-button');
+        var overlay = d.getElementById('menu-overlay');
+        var label = btn ? btn.querySelector('.menu-label') : null;
+        var open = false;
+        var closeTimer = null;
+
+        function setOpen(next) {
+          if (!btn || !overlay) return;
+          open = next;
+          btn.setAttribute('aria-expanded', String(open));
+          btn.classList.toggle('is-open', open);
+          if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+          d.body.classList.toggle('menu-open', open);
+          if (open) {
+            if (closeTimer) {
+              clearTimeout(closeTimer);
+              closeTimer = null;
+            }
+            overlay.removeAttribute('hidden');
+            requestAnimationFrame(function () {
+              overlay.classList.add('is-open');
+            });
+            var first = overlay.querySelector('a');
+            if (first) first.focus();
+          } else {
+            overlay.classList.remove('is-open');
+            closeTimer = setTimeout(function () {
+              overlay.setAttribute('hidden', '');
+            }, 250);
+            btn.focus();
+          }
+        }
+
+        if (btn && overlay) {
+          btn.addEventListener('click', function () {
+            setOpen(!open);
+          });
+          overlay.addEventListener('click', function (event) {
+            if (event.target.closest('a')) setOpen(false);
+          });
+          d.addEventListener('keydown', function (event) {
+            if (!open) return;
+            if (event.key === 'Escape') {
+              setOpen(false);
+            } else if (event.key === 'Tab') {
+              var focusables = overlay.querySelectorAll('a, button');
+              var first = focusables[0];
+              var last = focusables[focusables.length - 1];
+              if (event.shiftKey && d.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              } else if (!event.shiftKey && d.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }
+          });
+        }
+
+        var items = d.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in w) {
+          var io = new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-visible');
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+          );
+          items.forEach(function (el) {
+            io.observe(el);
+          });
+        } else {
+          items.forEach(function (el) {
+            el.classList.add('is-visible');
+          });
+        }
+      })();
+    </script>
   </body>
 </html>

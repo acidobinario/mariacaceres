@@ -1,0 +1,56 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const tips = site.socials.find((item) => item.kind === 'tips');
+---
+
+<section id="apoyame" class="support" aria-labelledby="support-heading">
+  <div class="container support-inner reveal">
+    <h2 id="support-heading" class="overline">Apóyame</h2>
+    <p class="support-line">Si te gusta mi música, puedes colaborar con un aporte.</p>
+    {
+      tips && (
+        <a class="btn btn-dark" href={tips.url} target="_blank" rel="noopener">
+          <Icon name="heart" />
+          Colaborar
+        </a>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .support {
+    background: var(--fg);
+    color: var(--ink);
+    padding-block: clamp(4rem, 10vh, 6rem);
+  }
+
+  .support-inner {
+    text-align: center;
+  }
+
+  .support .overline {
+    justify-content: center;
+    color: #55555a;
+  }
+
+  .support .overline::after {
+    display: none;
+  }
+
+  .support-line {
+    margin: 0 auto;
+    max-width: 24ch;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    line-height: 1.25;
+    color: #1b1b1e;
+  }
+
+  .btn-dark {
+    margin-top: 2.1rem;
+  }
+</style>

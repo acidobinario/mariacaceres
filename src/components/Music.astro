@@ -1,0 +1,209 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+
+const [featured, ...rest] = site.releases;
+const featuredLink =
+  featured.listen.find((item) => item.platform === 'more') ?? featured.listen[0];
+const spotifyLink =
+  featured.listen.find((item) => item.platform === 'spotify') ?? featured.listen[0];
+const restLinks = rest.map((release) => ({
+  release,
+  link: release.listen.find((item) => item.platform === 'more') ?? release.listen[0],
+}));
+---
+
+<section id="musica" class="section" aria-labelledby="music-heading">
+  <div class="container">
+    <h2 id="music-heading" class="overline">Música</h2>
+    <div class="featured reveal">
+      <article class="release-card">
+        <Image
+          class="release-cover"
+          src={featured.cover}
+          alt={`Portada del single "${featured.title}" de ${site.artist}`}
+          widths={[320, 480, 640]}
+          sizes="(min-width: 1024px) 260px, (min-width: 640px) 200px, 112px"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="release-body">
+          <p class="release-meta">{featured.type} · {featured.year}</p>
+          <h3 class="release-title">{featured.title}</h3>
+          <a class="listen-link" href={featuredLink.url} target="_blank" rel="noopener">
+            Escuchar
+            <Icon name="arrow" />
+          </a>
+        </div>
+      </article>
+      <div class="player">
+        <iframe
+          src={`https://open.spotify.com/embed/album/${featured.spotifyAlbumId}`}
+          title={`Reproductor de Spotify: ${featured.title}`}
+          loading="lazy"
+          height="352"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        ></iframe>
+        <p class="fallback">
+          ¿No carga el reproductor?
+          <a href={spotifyLink.url} target="_blank" rel="noopener">Ábrelo en Spotify</a>.
+        </p>
+      </div>
+    </div>
+    {
+      rest.length > 0 && (
+        <div class="release-grid">
+          {restLinks.map(({ release, link }) => (
+            <article class="release-card reveal">
+              <Image
+                class="release-cover"
+                src={release.cover}
+                alt={`Portada de "${release.title}" de ${site.artist}`}
+                widths={[320, 480, 640]}
+                sizes="(min-width: 640px) 16rem, calc(100vw - 2.5rem)"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="release-body">
+                <p class="release-meta">{release.type} · {release.year}</p>
+                <h3 class="release-title">{release.title}</h3>
+                <a class="listen-link" href={link.url} target="_blank" rel="noopener">
+                  Escuchar
+                  <Icon name="arrow" />
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .featured {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .release-card {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: var(--card);
+  }
+
+  .release-card:hover {
+    border-color: #4a4a50;
+  }
+
+  .release-cover {
+    flex: none;
+    width: 112px;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 0.5rem;
+  }
+
+  .release-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    align-self: stretch;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .release-meta {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .release-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1.1;
+  }
+
+  .listen-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    margin-top: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--muted);
+    align-self: flex-start;
+  }
+
+  .listen-link:hover {
+    color: var(--fg);
+  }
+
+  .player iframe {
+    display: block;
+    width: 100%;
+    height: 152px;
+    border: 0;
+    border-radius: 0.65rem;
+    background: var(--card);
+  }
+
+  .fallback {
+    margin: 0.75rem 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .fallback a {
+    text-underline-offset: 3px;
+  }
+
+  .release-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .player iframe {
+      height: 352px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .featured {
+      grid-template-columns: 1.25fr 1fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .release-card {
+      padding: 1.75rem;
+    }
+
+    .release-cover {
+      width: 200px;
+    }
+
+    .player {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+</style>
